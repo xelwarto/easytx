@@ -48,7 +48,7 @@ easytx/bin/easytx --help
 
 ### Examples
 
-#### Simple template Examples
+#### Simple template example
 
 ````
 # test.tmpl
@@ -60,12 +60,93 @@ Email:      {{.email}}
 ````
 # test.json
 {
-  "fname": "Ted",
-  "lname": "Elwartowski",
-  "email": "xelwarto.pub@gmail.com"
+  "fname": "John",
+  "lname": "Doe",
+  "email": "john.doe@gmail.com"
 }
 ````
 
 ````bash
 easytx/bin/easytx --tmpl=test.tmpl --json=test.json
+````
+
+#### Range template example
+
+````
+# test.tmpl
+{{range .people}}{{.name}}
+{{end}}
+````
+
+````
+# test.json
+{
+  "people": [
+    { "name": "John Doe" },
+    { "name": "Jane Doe" }
+  ]
+}
+````
+
+````bash
+easytx/bin/easytx --tmpl=test.tmpl --json=test.json
+````
+
+#### With template example
+
+````
+# test.tmpl
+{{with .people}}{{range .names}}{{.name}}
+{{end}}{{end}}
+````
+
+````
+# test.json
+{
+  "people": {
+    "names": [
+      { "name": "John Doe" },
+      { "name": "Jane Doe" }
+    ]
+  }
+}
+````
+
+````bash
+easytx/bin/easytx --tmpl=test.tmpl --json=test.json
+````
+
+### Environment Examples
+
+* The JSON data file can contain environments that have data specific to an environment. Using the **--env** cli paramater allows **easytx** to select data for that specific environment.
+
+#### Simple environment template example
+
+````
+# test.tmpl
+{{range .servers}}{{.host}}:{{.port}}
+{{end}}
+````
+
+````
+# test.json
+{
+  "vagrant": {
+    "servers": [
+      { "host": "server1", "port": "1234" },
+      { "host": "server2", "port": "6789" }
+    ]
+  },
+  "dev": {
+    "servers": [
+      { "host": "server3", "port": "8080" },
+      { "host": "server4", "port": "8080" }
+    ]
+  }
+}
+````
+
+````bash
+easytx/bin/easytx --tmpl=test.tmpl --json=test.json --env vagrant
+easytx/bin/easytx --tmpl=test.tmpl --json=test.json --env dev
 ````
