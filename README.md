@@ -30,7 +30,7 @@ Template processing utilizes the standard GO text template package. Template fil
 apt-get update && apt-get -y install golang
 
 # RHEL/CentOS
-yum makecache && yum -y install
+yum makecache && yum -y install golang
 ```
 
 ### Build easytx
@@ -147,6 +147,6 @@ easytx/bin/easytx --tmpl=test.tmpl --json=test.json
 ````
 
 ````bash
-easytx/bin/easytx --tmpl=test.tmpl --json=test.json --env vagrant
-easytx/bin/easytx --tmpl=test.tmpl --json=test.json --env dev
+easytx/bin/easytx --tmpl=test.tmpl --json=test.json --env=vagrant
+easytx/bin/easytx --tmpl=test.tmpl --json=test.json --env=dev
 ````
