@@ -67,7 +67,7 @@ Email:      {{.email}}
 ````
 
 ````bash
-easytx/bin/easytx --tmpl=test.tmpl --json=test.json
+easytx/bin/easytx --tmpl=test.tmpl --file=test.json
 ````
 
 #### Range template example
@@ -89,7 +89,7 @@ easytx/bin/easytx --tmpl=test.tmpl --json=test.json
 ````
 
 ````bash
-easytx/bin/easytx --tmpl=test.tmpl --json=test.json
+easytx/bin/easytx --tmpl=test.tmpl --file=test.json
 ````
 
 #### With template example
@@ -113,8 +113,21 @@ easytx/bin/easytx --tmpl=test.tmpl --json=test.json
 ````
 
 ````bash
-easytx/bin/easytx --tmpl=test.tmpl --json=test.json
+easytx/bin/easytx --tmpl=test.tmpl --file=test.json
 ````
+
+#### Inline JSON example
+
+````
+# test.tmpl
+{{with .people}}{{range .names}}{{.name}}
+{{end}}{{end}}
+````
+
+````bash
+easytx/bin/easytx --tmpl=test.tmpl --json='{ "people": {"names": [{ "name": "John Doe" },{ "name": "Jane Doe" }]} }'
+````
+
 
 ### Environment Examples
 
@@ -147,6 +160,6 @@ easytx/bin/easytx --tmpl=test.tmpl --json=test.json
 ````
 
 ````bash
-easytx/bin/easytx --tmpl=test.tmpl --json=test.json --env=vagrant
-easytx/bin/easytx --tmpl=test.tmpl --json=test.json --env=dev
+easytx/bin/easytx --tmpl=test.tmpl --file=test.json --env=vagrant
+easytx/bin/easytx --tmpl=test.tmpl --file=test.json --env=dev
 ````
