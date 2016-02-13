@@ -64,7 +64,7 @@ func main() {
 	if data != nil {
 		err = json.Unmarshal(data, &jsonMap)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error parsing JSON file: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Error parsing JSON data: %v\n", err)
 			os.Exit(1)
 		}
 		jsonData = jsonMap.(map[string]interface{})
@@ -87,4 +87,6 @@ func main() {
     fmt.Fprintf(os.Stderr, "Error executing template file: %v\n", err)
     os.Exit(1)
   }
+
+	os.Exit(0)
 }
