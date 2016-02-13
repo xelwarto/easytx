@@ -25,45 +25,66 @@ import (
   "text/template"
 )
 
+var version = string("v0.2.0")
+
+var disVersion bool
 var tmplFile string
 var jsonFile string
+var jsonString string
 var jsonMap interface{}
-var jsonData interface{}
+var jsonData map[string]interface{}
 var envParam string
 
 func init() {
+	flag.BoolVar(&disVersion, "version", false, "Display version")
   flag.StringVar(&tmplFile, "tmpl", "", "Template File")
-  flag.StringVar(&jsonFile, "json", "", "JSON Data File")
+  flag.StringVar(&jsonFile, "file", "", "JSON Data File")
+	flag.StringVar(&jsonString, "json", "", "JSON Input String")
 	flag.StringVar(&envParam, "env", "", "Environment Parameter")
   flag.Parse()
 }
 
 func main() {
-	file, err := ioutil.ReadFile(jsonFile)
-  if err != nil {
-    fmt.Fprintf(os.Stderr, "Error reading JSON file: %v\n", err)
-    os.Exit(1)
-  }
+	if disVersion {
+		fmt.Fprintf(os.Stdout, "Version: %v\n", version)
+		os.Exit(1)
+	}
 
-  err = json.Unmarshal(file, &jsonMap)
-  if err != nil {
-    fmt.Fprintf(os.Stderr, "Error parsing JSON file: %v\n", err)
-    os.Exit(1)
-  }
-	jsonData := jsonMap.(map[string]interface{})
+	var err error
+	data := []byte(jsonString)
 
-	if envParam != "" {
-		jsonData = jsonData[envParam].(map[string]interface{})
+	if jsonFile != "" {
+		data, err = ioutil.ReadFile(jsonFile)
+	  if err != nil {
+	    fmt.Fprintf(os.Stderr, "Error reading JSON file: %v\n", err)
+	    os.Exit(1)
+	  }
+	}
+
+	if data != nil {
+		err = json.Unmarshal(data, &jsonMap)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error parsing JSON file: %v\n", err)
+			os.Exit(1)
+		}
+		jsonData = jsonMap.(map[string]interface{})
+
+		if envParam != "" {
+			jsonData = jsonData[envParam].(map[string]interface{})
+		}
+	} else {
+		fmt.Fprintf(os.Stderr, "Error reading JSON data: %v\n", err)
+		os.Exit(1)
 	}
 
   tmpl, err := template.ParseFiles(tmplFile)
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Error reading input file: %v\n", err)
+    fmt.Fprintf(os.Stderr, "Error reading template file: %v\n", err)
     os.Exit(1)
   }
   err = tmpl.Execute(os.Stdout, jsonData)
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Error reading input file: %v\n", err)
+    fmt.Fprintf(os.Stderr, "Error executing template file: %v\n", err)
     os.Exit(1)
   }
 }
