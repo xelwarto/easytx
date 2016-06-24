@@ -116,6 +116,23 @@ easytx/bin/easytx --tmpl=test.tmpl --file=test.json
 easytx/bin/easytx --tmpl=test.tmpl --file=test.json
 ````
 
+#### Template using environment variables
+
+````
+# test.tmpl
+Host Name: {{ENV "HOST"}}
+Domain: {{.domain}}
+````
+
+````
+# test.json
+{ "domain": "google.com" }
+````
+
+````bash
+HOST=`hostname` easytx/bin/easytx --tmpl=test.tmpl --file=test.json
+````
+
 #### Inline JSON example
 
 ````
