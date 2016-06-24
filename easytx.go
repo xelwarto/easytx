@@ -23,6 +23,7 @@ import (
   "io/ioutil"
   "encoding/json"
   "text/template"
+	"path/filepath"
 )
 
 var version = string("v0.2.0")
@@ -53,6 +54,12 @@ func main() {
 	var err error
 	data := []byte(jsonString)
 
+	funcMap := template.FuncMap {
+		"ENV": func (e string) string {
+      return os.Getenv(e)
+    },
+	}
+
 	if jsonFile != "" {
 		data, err = ioutil.ReadFile(jsonFile)
 	  if err != nil {
@@ -77,11 +84,13 @@ func main() {
 		os.Exit(1)
 	}
 
-  tmpl, err := template.ParseFiles(tmplFile)
+	tmplName := filepath.Base(tmplFile)
+  tmpl, err := template.New(tmplName).Funcs(funcMap).ParseFiles(tmplFile)
   if err != nil {
     fmt.Fprintf(os.Stderr, "Error reading template file: %v\n", err)
     os.Exit(1)
   }
+
   err = tmpl.Execute(os.Stdout, jsonData)
   if err != nil {
     fmt.Fprintf(os.Stderr, "Error executing template file: %v\n", err)
