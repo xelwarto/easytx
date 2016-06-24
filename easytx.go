@@ -26,7 +26,7 @@ import (
 	"path/filepath"
 )
 
-var version = string("v0.2.0")
+var version = string("v0.3.0")
 
 var disVersion bool
 var tmplFile string
